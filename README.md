@@ -1,3 +1,7 @@
+
+<h1>после клонирования, в корне проекта "composer install"</h1>
+
+<p>================================================================================================================</p>
 <p align="center">
     <a href="https://github.com/yiisoft" target="_blank">
         <img src="https://avatars0.githubusercontent.com/u/993323" height="100px">
