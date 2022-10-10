@@ -17,8 +17,9 @@ class m220922_085547_create_reviews_table extends Migration
             'name'=> $this->char(30),
             'text'=> $this->string(400),
             'date'=> $this->date(),
-            'status'=>$this->boolean()
+            'status'=>$this->integer()->defaultValue(0),
         ]);
+
     }
 
     /**

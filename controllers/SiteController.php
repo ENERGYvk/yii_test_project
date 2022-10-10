@@ -2,6 +2,7 @@
 
 namespace app\controllers;
 
+use app\models\ReviewsSearch;
 use Yii;
 use yii\filters\AccessControl;
 use yii\web\Controller;
@@ -9,6 +10,8 @@ use yii\web\Response;
 use yii\filters\VerbFilter;
 use app\models\LoginForm;
 use app\models\ContactForm;
+use app\models\Reviews;
+use app\models\SignupForm;
 
 class SiteController extends Controller
 {
@@ -86,6 +89,21 @@ class SiteController extends Controller
         ]);
     }
 
+    public function actionSignup()
+    {
+        $model = new SignupForm();
+        if ($model->load(Yii::$app->request->post())) {
+            if ($user = $model->signup()) {
+                if (Yii::$app->getUser()->login($user)) {
+                    return $this->goHome();
+                }
+            }
+        }
+        return $this->render('signup', [
+            'model' => $model,
+        ]);
+    }
+
     /**
      * Logout action.
      *
@@ -116,13 +134,41 @@ class SiteController extends Controller
         ]);
     }
 
-    /**
-     * Displays about page.
-     *
-     * @return string
-     */
-    public function actionAbout()
+    public function actionAdminIndex()
     {
-        return $this->render('about');
+       return $this->render('admin');
     }
+
+
+    public function actionReviews()
+    {
+        $model = new Reviews();
+        if(yii::$app->request->isAjax && $model->load(yii::$app->request->post()))
+        {
+            $model->date=date('Y.mm.dd');
+            if($model->save())
+            {
+                Yii::$app->session->setFlash('success',"Успешно");
+            }
+            else{
+                Yii::$app->session->setFlash('error',"Ошибка отправки");
+            }
+        }
+
+
+
+        $searchModel = new ReviewsSearch();
+        $dataProvider = $searchModel->search($this->request->queryParams);
+
+
+        return $this->render('reviews', [
+            'searchModel' => $searchModel,
+            'dataProvider' => $dataProvider,
+            'model'=> $model
+        ]);
+    }
+
+
+
+
 }
